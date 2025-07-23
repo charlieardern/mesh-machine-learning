@@ -9,6 +9,7 @@ class ModelNetSubset(Dataset):
         self,
         train: bool,
         norm_params_x: tuple[torch.Tensor, torch.Tensor] | None,
+        cats: list[int],
     ) -> None:
         # Apply normalisation to x:
         if train:
@@ -17,6 +18,11 @@ class ModelNetSubset(Dataset):
         else:
             x = torch.load("data/ModelNet_subset/test_x.pt")
             y = torch.load("data/ModelNet_subset/test_y.pt")
+
+        # Selecting the categories of interest:
+        mask = torch.isin(y, torch.tensor(cats_of_interest)).squeeze()
+        y = y[mask]
+        x = x[mask]
 
         if norm_params_x is None:
             mean_x = x.mean(dim=0)
@@ -27,6 +33,10 @@ class ModelNetSubset(Dataset):
             self.norm_params_x = norm_params_x
             self.x = (x - norm_params_x[0]) / norm_params_x[1]
 
+        # relabeling classes:
+        for i in range(len(cats_of_interest)):
+            mask = torch.isin(y, cats_of_interest[i])
+            y[mask] = i
         self.y = y
 
     def __len__(self) -> int:
@@ -38,8 +48,9 @@ class ModelNetSubset(Dataset):
         return x_i, y_i
 
 
-train_dataset = ModelNetSubset(train=True, norm_params_x=None)
+cats_of_interest = [0, 3, 5, 6, 7, 8, 9, 10, 15, 17, 19, 30, 35]
+
+train_dataset = ModelNetSubset(train=True, norm_params_x=None, cats=cats_of_interest)
 test_dataset = ModelNetSubset(
-    train=False,
-    norm_params_x=train_dataset.norm_params_x,
+    train=False, norm_params_x=train_dataset.norm_params_x, cats=cats_of_interest
 )
