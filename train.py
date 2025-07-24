@@ -15,7 +15,7 @@ from utils import evaluate_model, loss_fn, train_step
 
 def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(device)
+    print(f"Using device: {device}")
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
     # model = MLP2(input_dim=600, latent_dim=64, hidden_dim=128, output_dim=len(train_dataset.cats))
     model = TransformerClassifier(
@@ -30,9 +30,11 @@ def main() -> None:
     optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.66)
 
-    def print_train_time(start: float, end: float) -> float:
+    def print_train_time(
+        start: float, end: float, device: torch.device = None
+    ) -> float:
         total_time = end - start
-        print(f"Train time: {total_time:.3f} seconds")
+        print(f"Train time on {device}: {total_time:.3f} seconds")
         return total_time
 
     train_time_start = default_timer()
@@ -59,7 +61,7 @@ def main() -> None:
         train_losses.append(train_loss.detach().item())
         test_losses.append(test_loss.detach().item())
     train_time_end = default_timer()
-    print_train_time(start=train_time_start, end=train_time_end)
+    print_train_time(start=train_time_start, end=train_time_end, device=device)
 
     pyplot.plot(numpy.arange(0, epochs, step=1), train_losses, label="train loss")
     pyplot.plot(numpy.arange(0, epochs, step=1), test_losses, label="test loss")
