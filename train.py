@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from timeit import default_timer
 
+import pathlib
 import numpy
 import torch
 from matplotlib import pyplot
@@ -68,7 +69,9 @@ def main() -> None:
     pyplot.ylabel("loss")
     pyplot.xlabel("epochs")
     pyplot.legend()
-    pyplot.savefig("figures/loss_curves")
+    output_directory = pathlib.Path("figures")
+    output_directory.mkdir(exist_ok=True)
+    pyplot.savefig(output_directory / "loss_curves")
 
 
 if __name__ == "__main__":
