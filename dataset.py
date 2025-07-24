@@ -11,6 +11,7 @@ class ModelNetSubset(Dataset):
         norm_params_x: tuple[torch.Tensor, torch.Tensor] | None,
         cats: list[int],
     ) -> None:
+        self.cats = cats
         # Apply normalisation to x:
         if train:
             x = torch.load("data/ModelNet_subset/train_x.pt")

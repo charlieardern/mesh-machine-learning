@@ -17,4 +17,5 @@ class BasicMLP(nn.Module):
         )
 
     def forward(self, x: torch.Tensor):
+        x = x.reshape(x.shape[0], -1)
         return self.mlp(x)
