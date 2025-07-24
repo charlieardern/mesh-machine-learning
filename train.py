@@ -9,15 +9,25 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from dataset import test_dataset, train_dataset
-from models import BasicMLP
+from models import TransformerClassifier
 from utils import evaluate_model, loss_fn, train_step
 
 
 def main() -> None:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(device)
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    model = BasicMLP(input_dim=600, hidden_dim=64, output_dim=len(train_dataset.cats))
+    # model = MLP2(input_dim=600, latent_dim=64, hidden_dim=128, output_dim=len(train_dataset.cats))
+    model = TransformerClassifier(
+        input_dim=3,
+        num_heads=4,
+        num_layers=6,
+        hidden_dim=64,
+        output_dim=len(train_dataset.cats),
+        max_points=200,
+    )
 
-    optimizer = torch.optim.Adam(params=model.parameters())
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.66)
 
     def print_train_time(start: float, end: float) -> float:
@@ -26,7 +36,7 @@ def main() -> None:
         return total_time
 
     train_time_start = default_timer()
-    epochs = 50
+    epochs = 10
     train_losses = []
     test_losses = []
     # best_test_loss = 9e9
