@@ -18,7 +18,7 @@ def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using device: {device}")
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    # model = MLP2(input_dim=600, latent_dim=64, hidden_dim=128, output_dim=len(train_dataset.cats))
+    #model = MLP2(input_dim=600, latent_dim=64, hidden_dim=128, output_dim=len(train_dataset.cats))
     model = TransformerClassifier(
         input_dim=3,
         num_heads=4,
@@ -44,7 +44,13 @@ def main() -> None:
     train_losses = []
     test_losses = []
     test_accuracies = []
-    # best_test_loss = 9e9
+    best_test_loss = 9e9
+
+    weights_directory = pathlib.Path("saved_objects")
+    weights_directory.mkdir(exist_ok=True)
+
+    figures_directory = pathlib.Path("figures")
+    figures_directory.mkdir(exist_ok=True)
 
     for epoch in tqdm(range(epochs)):
         print(f"Epoch: {epoch + 1}\n----------")
@@ -64,6 +70,10 @@ def main() -> None:
         train_losses.append(train_loss.detach().item())
         test_losses.append(test_loss.detach().item())
         test_accuracies.append(accuracy)
+        if (epoch > epochs / 4) and (test_loss < best_test_loss):
+            best_test_loss = test_loss
+            torch.save(model.state_dict(), (weights_directory / "model_1_weights.pth"))
+            print(f"New best: {best_test_loss}")
     train_time_end = default_timer()
     print_train_time(start=train_time_start, end=train_time_end, device=device)
 
@@ -72,9 +82,8 @@ def main() -> None:
     pyplot.ylabel("loss")
     pyplot.xlabel("epochs")
     pyplot.legend()
-    output_directory = pathlib.Path("figures")
-    output_directory.mkdir(exist_ok=True)
-    pyplot.savefig(output_directory / "loss_curves")
+    pyplot.savefig(figures_directory / "loss_curves")
+    print(f"Weights saved with lowest cross entropy test loss of {best_test_loss}")
 
 
 if __name__ == "__main__":

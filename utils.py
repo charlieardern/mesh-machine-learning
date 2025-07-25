@@ -54,7 +54,7 @@ def evaluate_model(
         accuracy = accuracy_fn(y_pred, test_data_y.squeeze(1))
     print(f"Train loss: {train_loss:.5f}")
     print(f"Test loss: {test_loss:.5f}")
-    print(f"Accuracy: {(accuracy*100):.5f}%")
+    print(f"Accuracy: {(accuracy*100):.2f}%")
     return train_loss, test_loss, accuracy
 
 

@@ -1,7 +1,5 @@
 .venv/
 data/
-samples/
-sub_samples/
-output_figures/
 __pycache__/
 figures/
+saved_objects/

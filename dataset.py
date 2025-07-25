@@ -52,8 +52,8 @@ class ModelNetSubset(Dataset):
         return x_i, y_i
 
 
-# cats_of_interest = [0, 3, 5, 6, 7, 8, 9, 10, 15, 17, 19, 30, 35]
-cats_of_interest = [0, 6, 8, 17, 35]
+cats_of_interest = [0, 3, 5, 6, 7, 8, 9, 10, 15, 17, 19, 30, 35]
+# cats_of_interest = [0, 6, 8, 17, 35]
 
 train_dataset = ModelNetSubset(train=True, norm_params_x=None, cats=cats_of_interest)
 test_dataset = ModelNetSubset(
