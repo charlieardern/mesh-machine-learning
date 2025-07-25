@@ -38,7 +38,7 @@ for i in range(len(train_set)):
             if c > rejection_limit:
                 c = 0
                 d = d / 2
-    print(f"Object {i + 1} saved with class {data_y.item()}")")
+    print(f"Object {i + 1} saved with class {data_y.item()}")
     train_x.append(samples)
     train_y.append(data_y)
 train_x = torch.stack(train_x, dim=0)
