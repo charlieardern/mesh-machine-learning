@@ -1,3 +1,3 @@
 # Machine Learning on Meshes
 Coming soon...
-![alt text](readme_images/image.png)
+![alt text](readme_images/image-1.png)
