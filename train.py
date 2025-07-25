@@ -23,13 +23,14 @@ def main() -> None:
         input_dim=3,
         num_heads=4,
         num_layers=6,
-        hidden_dim=64,
+        hidden_dim=256,
         output_dim=len(train_dataset.cats),
         max_points=200,
     )
 
-    optimizer = torch.optim.Adam(params=model.parameters(), lr=0.01)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.66)
+    #optimizer = torch.optim.Adam(params=model.parameters(), lr=0.1)
+    optimizer = torch.optim.SGD(params=model.parameters(), lr=0.1)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=15, gamma=0.5)
 
     def print_train_time(
         start: float, end: float, device: torch.device = None
@@ -39,9 +40,10 @@ def main() -> None:
         return total_time
 
     train_time_start = default_timer()
-    epochs = 10
+    epochs = 60
     train_losses = []
     test_losses = []
+    test_accuracies = []
     # best_test_loss = 9e9
 
     for epoch in tqdm(range(epochs)):
@@ -53,7 +55,7 @@ def main() -> None:
             optimizer=optimizer,
         )
         scheduler.step()
-        train_loss, test_loss = evaluate_model(
+        train_loss, test_loss, accuracy = evaluate_model(
             model=model,
             loss_fn=loss_fn,
             train_data=train_dataset,
@@ -61,6 +63,7 @@ def main() -> None:
         )
         train_losses.append(train_loss.detach().item())
         test_losses.append(test_loss.detach().item())
+        test_accuracies.append(accuracy)
     train_time_end = default_timer()
     print_train_time(start=train_time_start, end=train_time_end, device=device)
 

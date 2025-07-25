@@ -26,8 +26,10 @@ class ModelNetSubset(Dataset):
         x = x[mask]
 
         if norm_params_x is None:
-            mean_x = x.mean(dim=0)
-            std_x = x.std(dim=0)
+            print(f"Shape with dim=1: {x.mean(dim=1).unsqueeze(1).shape}")
+            print(f"Shape with dim=(0,1): {x.mean(dim=(0,1)).shape}")
+            mean_x = x.mean(dim=1).unsqueeze(1)
+            std_x = x.std(dim=1).unsqueeze(1)
             self.norm_params_x = mean_x, std_x
             self.x = (x - mean_x) / std_x
         else:
@@ -54,5 +56,5 @@ cats_of_interest = [0, 6, 8, 17, 35]
 
 train_dataset = ModelNetSubset(train=True, norm_params_x=None, cats=cats_of_interest)
 test_dataset = ModelNetSubset(
-    train=False, norm_params_x=train_dataset.norm_params_x, cats=cats_of_interest
+    train=False, norm_params_x=None, cats=cats_of_interest
 )

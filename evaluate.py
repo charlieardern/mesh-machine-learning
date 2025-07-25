@@ -3,10 +3,18 @@ from __future__ import annotations
 import torch
 from matplotlib import pyplot
 
-# from dataset import dataset
+from dataset import test_dataset, train_dataset
+from utils import unnormalise_data
 
+x_normed = train_dataset.x
+print(f"x_normed element (0,0): {x_normed[:,0,0]}")
+
+x = unnormalise_data(train_dataset.x, train_dataset.norm_params_x)
+print(f"x element (0,0): {x[:,0,0]}")
 # points = dataset[3].pos
-points = torch.load("samples/object3_class_0.pt")
+item_index = 1
+points = x[item_index]
+print(f"category:{train_dataset.y[item_index]}")
 
 x, y, z = points[:, 0], points[:, 1], points[:, 2]
 
@@ -24,4 +32,4 @@ scale = torch.tensor([x.max() - x.min(), y.max() - y.min(), z.max() - z.min()]).
 ax.set_xlim([x.mean() - scale / 2, x.mean() + scale / 2])
 ax.set_ylim([y.mean() - scale / 2, y.mean() + scale / 2])
 ax.set_zlim([z.mean() - scale / 2, z.mean() + scale / 2])
-pyplot.savefig("test1")
+pyplot.savefig("figures/test1")

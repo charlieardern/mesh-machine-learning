@@ -68,7 +68,7 @@ class TransformerClassifier(nn.Module):
             d_model=hidden_dim,
             nhead=num_heads,
             dim_feedforward=hidden_dim * 4,
-            dropout=0.1,
+            dropout=0.3,
             batch_first=True,
         )
         self.transformer_encoder = nn.TransformerEncoder(
