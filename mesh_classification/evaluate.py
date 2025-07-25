@@ -4,9 +4,9 @@ import torch
 from matplotlib import pyplot
 from torch_geometric.datasets import ModelNet
 
-from dataset import test_dataset, train_dataset
-from utils import unnormalise_data
-from models import TransformerClassifier
+from mesh_classification.dataset import test_dataset, train_dataset
+from mesh_classification.utils import unnormalise_data
+from mesh_classification.models import TransformerClassifier
 
 from torchmetrics import ConfusionMatrix
 from mlxtend.plotting import plot_confusion_matrix
