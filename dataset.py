@@ -29,7 +29,8 @@ class ModelNetSubset(Dataset):
             print(f"Shape with dim=1: {x.mean(dim=1).unsqueeze(1).shape}")
             print(f"Shape with dim=(0,1): {x.mean(dim=(0,1)).shape}")
             mean_x = x.mean(dim=1).unsqueeze(1)
-            std_x = x.std(dim=1).unsqueeze(1)
+            std_x = x.std(dim=(1,2)).reshape(-1,1,1)
+            print(f"std_x.shape: {std_x.shape}")
             self.norm_params_x = mean_x, std_x
             self.x = (x - mean_x) / std_x
         else:
