@@ -9,9 +9,9 @@ from matplotlib import pyplot
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
-from mesh_classification.dataset import test_dataset, train_dataset
-from mesh_classification.models import TransformerClassifier
-from mesh_classification.utils import evaluate_model, loss_fn, train_step
+from dataset import test_dataset, train_dataset
+from models import TransformerClassifier
+from utils import evaluate_model, loss_fn, train_step
 
 
 def main() -> None:
