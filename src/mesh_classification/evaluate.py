@@ -11,14 +11,12 @@ from models import TransformerClassifier
 from torchmetrics import ConfusionMatrix
 from mlxtend.plotting import plot_confusion_matrix
 
-#plot full size mesh:
+#plot full size mesh in 3D:
 train_set = ModelNet(root="data/ModelNet", name="40", train=True)
-points = train_set[4].pos
-
-# Plot object in 3D
+points = train_set[item_index].pos
 x = unnormalise_data(train_dataset.x, train_dataset.norm_params_x)
 item_index = 1
-#points = x[item_index]
+
 print(f"category:{train_dataset.y[item_index]}")
 
 x, y, z = points[:, 0], points[:, 1], points[:, 2]
