@@ -60,7 +60,7 @@ class TransformerClassifier(nn.Module):
         max_points: int,
     ) -> None:
         super().__init__()
-        self.embedding = nn.Linear(input_dim, hidden_dim, output_dim)
+        self.embedding = nn.Linear(input_dim, hidden_dim)
         self.positional_encoding = nn.Parameter(
             torch.empty(1, max_points, hidden_dim).normal_()
         )
