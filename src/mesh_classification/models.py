@@ -52,13 +52,13 @@ class MLP2(nn.Module):
 class TransformerClassifier(nn.Module):
     def __init__(
         self,
-        input_dim,
-        num_heads,
-        num_layers,
-        hidden_dim,
-        output_dim,
+        input_dim: int,
+        num_heads: int,
+        num_layers: int,
+        hidden_dim: int,
+        output_dim: int,
         max_points: int,
-    ):
+    ) -> None:
         super().__init__()
         self.embedding = nn.Linear(input_dim, hidden_dim, output_dim)
         self.positional_encoding = nn.Parameter(
@@ -76,7 +76,7 @@ class TransformerClassifier(nn.Module):
         )
         self.fc = nn.Linear(hidden_dim, output_dim)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         _, num_points, _ = x.size()
         x = self.embedding(x)
         x = x + self.positional_encoding[:, :num_points, :]
