@@ -83,3 +83,31 @@ class TransformerClassifier(nn.Module):
         x = self.transformer_encoder(x)
         x = x.mean(dim=1)
         return self.fc(x)
+
+
+class OffsetAttention(nn.Module):
+    # Implementatiom of Offset-Attention architecture from PCT: Point Cloud Transformer, M. Guo et. al. 2012.09688
+    def __init__(self, embed_dim: int, hidden_dim: int) -> None:
+        super().__init__()
+        self.w_q = nn.Linear(embed_dim, hidden_dim)
+        self.w_k = nn.Linear(embed_dim, hidden_dim)
+        self.w_v = nn.Linear(embed_dim, embed_dim)
+
+    def forward(self, x: torch.Tensor):
+        q = self.w_q(x)  # (B, N, hidden_dim)
+        k = self.w_k(x)  # (B, N, hidden_dim)
+        v = self.w_v(x)  # (B, N, embed_dim)
+
+        # Computing attention matrix
+        a = k.transpose(-1, -2) @ q  # (B, N, N)
+        a = nn.functional.softmax(
+            a, dim=1
+        )  # (B, N, N) apply softmax along dim=1 (approach used in paper - usually you do over dim=2)
+        l1_norm = torch.sum(
+            a, dim=2
+        )  # (B, N, N) sum over dim=2 to get L1 norm of l columns
+        attn_mat = (
+            a / l1_norm
+        )  # (B, N, N) ensures columns of attn_mat sum to 1 (we have to do this as the softmax is applied over the columns rather than rows like usual)
+
+        f_sa = attn_mat @ v  # (B, N, embed_dim)
