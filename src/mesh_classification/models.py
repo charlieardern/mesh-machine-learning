@@ -246,7 +246,7 @@ class SPCTMeshClassifier(nn.Module):
         super().__init__()
         self.embedding = SPCTEmbedder(embed_dim=embed_dim)
         self.encoder = PCTEncoder(num_layers=num_attn_layers,embed_dim=embed_dim, hidden_dim=attn_hidden_dim)
-        self.classifier = PCTClassifier(input_dim=4*embed_dim, hidden_dim=classifier_hidden_dim, dropout=classifier_dropout, num_classes=num_classes)
+        self.classifier = PCTClassifier(input_dim=num_attn_layers*embed_dim, hidden_dim=classifier_hidden_dim, dropout=classifier_dropout, num_classes=num_classes)
 
     def forward(self, mesh) -> torch.Tensor:
         x = self.embedding(mesh) # (B, N, embed_dim)
