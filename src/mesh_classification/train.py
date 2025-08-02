@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
 from dataset import test_dataset, train_dataset
-from models import TransformerClassifier
+from models import TransformerClassifier, SPCTMeshClassifier
 from utils import evaluate_model, loss_fn, train_step
 
 
@@ -19,15 +19,16 @@ def main() -> None:
     print(f"Using device: {device}")
     train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=True)
     #model = MLP2(input_dim=600, latent_dim=64, hidden_dim=128, output_dim=len(train_dataset.cats))
-    model = TransformerClassifier(
-        input_dim=3,
-        num_heads=4,
-        num_layers=6,
-        hidden_dim=256,
-        output_dim=len(train_dataset.cats),
-        max_points=200,
-    )
-
+   # model = TransformerClassifier(
+   #     input_dim=3,
+   #     num_heads=4,
+   #     num_layers=6,
+   #     hidden_dim=256,
+   #     output_dim=len(train_dataset.cats),
+   #     max_points=200,
+   # )
+    
+    model = SPCTMeshClassifier(embed_dim=128, attn_hidden_dim=32, num_attn_layers=4, classifier_hidden_dim=256, classifier_dropout=0.5, num_classes=len(train_dataset.cats))
     #optimizer = torch.optim.Adam(params=model.parameters(), lr=0.1)
     optimizer = torch.optim.SGD(params=model.parameters(), lr=0.1)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=15, gamma=0.5)

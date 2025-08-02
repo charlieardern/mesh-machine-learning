@@ -12,10 +12,10 @@ from torchmetrics import ConfusionMatrix
 from mlxtend.plotting import plot_confusion_matrix
 
 #plot full size mesh in 3D:
+item_index = 1
 train_set = ModelNet(root="data/ModelNet", name="40", train=True)
 points = train_set[item_index].pos
 x = unnormalise_data(train_dataset.x, train_dataset.norm_params_x)
-item_index = 1
 
 print(f"category:{train_dataset.y[item_index]}")
 
