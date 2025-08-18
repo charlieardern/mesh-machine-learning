@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+
 import torch
 from torch_geometric.datasets import ModelNet
 
@@ -75,10 +77,14 @@ for i in range(len(test_set)):
 test_x = torch.stack(test_x, dim=0)
 test_y = torch.stack(test_y, dim=0)
 
-torch.save(train_x, "data/ModelNet_subset/train_x.pt")
-torch.save(train_y, "data/ModelNet_subset/train_y.pt")
-torch.save(test_x, "data/ModelNet_subset/test_x.pt")
-torch.save(test_y, "data/ModelNet_subset/test_y.pt")
+save_dir = "data/ModelNet_subset"
+os.makedirs(save_dir, exist_ok=True)
+
+torch.save(train_x, os.path.join(save_dir, "train_x.pt"))
+torch.save(train_y, os.path.join(save_dir, "train_y.pt"))
+torch.save(test_x, os.path.join(save_dir, "test_x.pt"))
+torch.save(test_y, os.path.join(save_dir, "test_y.pt"))
+
 print(f"train_x shape: {train_x.shape}")
 print(f"train_y shape: {train_y.shape}")
 print(f"test_x shape: {test_x.shape}")
